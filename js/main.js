@@ -1,5 +1,6 @@
 'use strict'
 
+const gAudioPowerup = new Audio('sound/powerup.mp3')
 const gAudioRight = new Audio('sound/right.mp3')
 const gAudioWrong = new Audio('sound/wrong.mp3')
 const gAudioCheer = new Audio('sound/cheer.mp3')
@@ -13,6 +14,7 @@ const gAudioNotes = [
 const gAudioLength = 1200
 
 // Don't scare that kid
+gAudioPowerup.volume = 0.05
 gAudioBreak.volume = 0.05
 gAudioRight.volume = 0.05
 gAudioWrong.volume = 0.05
@@ -113,14 +115,31 @@ function onUserPress(elBtn) {
     }
 }
 
+function onUsePowerup(powerup) {
+    gAudioPowerup.play()
+
+    switch (powerup) {
+        case 'next-note': {
+            const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx)
+            const elBtn = document.querySelector(`.game-container > button:nth-child(${nextNote})`)
+            onUserPress(elBtn)
+            break
+        }
+        case 'skip-level': {
+            gSkipIntervalId = setInterval(onTapNextNote, 500)
+            break
+        }
+    }
+}
+
 function onTapNextNote() {
     const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx)
     const elBtn = document.querySelector(`.game-container > button:nth-child(${nextNote})`)
-
     onUserPress(elBtn)
 }
 
 function onSkipLevel() {
+    gAudioPowerup.play()
     gSkipIntervalId = setInterval(onTapNextNote, 500)
 }
 
