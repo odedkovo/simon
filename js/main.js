@@ -11,7 +11,7 @@ const gAudioNotes = [
   new Audio('sound/note/3.mp3'),
   new Audio('sound/note/4.mp3')
 ]
-const gAudioLength = 1200
+var gAudioLength = 1200
 
 // Don't scare that kid
 gAudioBreak.volume = 0.05;
@@ -43,6 +43,9 @@ function onInit() {
 }
 
 function onStart() {
+
+  if (gBalloonsNums) renderBalloonsNums()
+
   gGameScore = 0
   gIsUserTurn = false
   document.querySelector('.score').innerText = gGameScore
@@ -206,19 +209,17 @@ function goodJob(txt) {
 
 function onSelectLevel(val) {
   gBalloonsNums = val
-  gAudioLength = gAudioLength / Math.sqrt(gBalloonsNums)
-  console.log('gAudioLength', gAudioLength)
-  console.log('gBalloonsNums', gBalloonsNums)
+  gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2)
   onStart()
 }
 
 function renderBalloonsNums() {
   const gameContainer = document.querySelector('.game-container');
-  gameContainer.innerHTML = ''; // Clear existing buttons
+  gameContainer.innerHTML = ''
 
-  var strHTML = '';
+  var strHTML = ''
   for (var i = 0; i < gBalloonsNums; i++) {
-    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1}</button>`;
+    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1}</button>`
   }
-  gameContainer.innerHTML = strHTML; // Render new buttons
+  gameContainer.innerHTML = strHTML
 }

@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>סָיימוֹן</title>
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.css" />
   <link
     href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAACbUlEQVRIx7WUsU/qUBTGv96WSlWeEBZijJggxrREdwYixMnByYEyOvgfsBAMG0xuDsZ/QGc3NDFhgTioiYsmkhBYGLSBkLYR0va8gSjvQXiIT7/l5ibfOd/v3pN7gSmVSMTj8ThRfzdYk8lkMpl83/+AVFVVVXU0eHiVJEmSpB8DIcpkMplsdhCYz+fzhQJROBwOh8PDQN+oQCAQCASIRFEURZHI45GkP0/e7Xa73e70AMJnjel0Op1OA6oaDB4eAkAw6PcDvZ5t6zrw/Hx2trAw/cHYZ426ruu6DtzcGEYuBzQa19etFvD4WKtls4AoRqMPDwBjjLGPrt84ilgsFovF6EOapmmaRiP6O/jbAIguL4vFYpHGqlKpVCoVomq1Wq1Wibxer9fn+w+Q9+cUiUQikQhNrfdgWZZlWf4yyGhj27Zt254MUK/X6/X6F0aiKIqiKIOCYRmGYRjGZADLsizLIgqFQqHV1SkAnp5OTn79ItK0qyuPZ7SxaZqmaU4GKJfPzxmbfAPc/f3pqaIQLS8vLtZqgOP0bYyJoiAARC5Xrwf4/Vtbb2+Th1YqlUqlErC01GgkEkCz2WxyHLC+LsuiCAiCJLlcgM+3vd3pcBzXaJTLR0dEs7Ptdv+D4TiOG/A6DsBxQKvV621sAGtru7vl8ngAjuvXv7xcXIgiwNjMjCj2h+k4fQfPA4LA8xwHCO323V2hABiG223bwPy8xwMAbvfcHGMAY32j47y+3t4OAsZpZ2dzEwAsy7IcBxAExhwHMIxOx3GAlZVUyjT/1WFIudzenstFlEpFo9M8o+Pj/X2eJzo4SCR4fnzdb2N4Pyv9cduVAAAAAElFTkSuQmCC"
     rel="icon" type="image/x-icon" />
@@ -19,6 +19,17 @@
     <button onclick="onUserPress(this)">3</button>
     <button onclick="onUserPress(this)">4</button>
   </section>
+  <ul class="powerups-list">
+    <li>
+      <img src="img/p3.png" alt="powerup img" title="Tap next note" onclick="onUsePowerup('next-note')" />
+    </li>
+    <li>
+      <img src="img/p2.png" alt="powerup img" title="Skip to next level" onclick="onUsePowerup('skip-level')" />
+    </li>
+    <li>
+      <img src="img/p1.png" alt="powerup img" title="Slow down next level note play" />
+    </li>
+  </ul>
   <section class="user-msg"></section>
   <h2>
     ניקוד:
@@ -28,11 +39,25 @@
     שיא:
     <span class="top-score">0</span>
   </h3>
+
+  <div>
+    <select onchange="onSelectLevel(+this.value)">
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+    </select>
+  </div>
+
   <section class="modal show">
     <h3 class="good-job-headline">יֵשׁ לָךְ זִכָּרוֹן טוֹב?</h3>
     <img src="img/go1.gif" />
-    <button onclick="onStart()">קָדִימָה!</button>
+    <button onclick="onStart(this)">קָדִימָה!</button>
   </section>
+  <section class="stars"></section>
   <img src="img/broken.png" class="broken" />
 
   <script src="js/util.service.js"></script>
