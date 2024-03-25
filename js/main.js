@@ -9,9 +9,9 @@ const gAudioNotes = [
   new Audio('sound/note/1.mp3'),
   new Audio('sound/note/2.mp3'),
   new Audio('sound/note/3.mp3'),
-  new Audio('sound/note/4.mp3')
-]
-var gAudioLength = 1200
+  new Audio('sound/note/4.mp3'),
+];
+var gAudioLength = 1200;
 
 // Don't scare that kid
 gAudioBreak.volume = 0.05;
@@ -30,41 +30,50 @@ let gChallengeInterval;
 let gLevel = 1;
 let gStars = 0;
 var gSkipIntervalId;
+let gCountWinning = 0;
 
 gAudioPowerup.volume = 0.05;
 gAudioBreak.volume = 0.05;
 gAudioRight.volume = 0.05;
 gAudioWrong.volume = 0.05;
 gAudioCheer.volume = 0.1;
-var gBalloonsNums
+var gBalloonsNums;
 
 function onInit() {
-  document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
+  localStorage.setItem('maxLevelsInARow', 4);
+  document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(
+    1,
+    6
+  )}.gif`;
 }
 
 function onStart() {
+  if (gBalloonsNums) renderBalloonsNums();
 
-  if (gBalloonsNums) renderBalloonsNums()
-
-  gGameScore = 0
-  gIsUserTurn = false
-  document.querySelector('.score').innerText = gGameScore
-  document.querySelector('.top-score').innerText = gTopScore
-  document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
-  document.querySelector('.modal').classList.remove('show')
-  gNoteSeq = ''
-  playComputer()
+  gGameScore = 0;
+  gIsUserTurn = false;
+  document.querySelector('.score').innerText = gGameScore;
+  document.querySelector('.top-score').innerText = gTopScore;
+  document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(
+    1,
+    6
+  )}.gif`;
+  document.querySelector('.modal').classList.remove('show');
+  gNoteSeq = '';
+  playComputer();
 }
 
 function playComputer() {
-  flashMsg('נָא לְהַקְשִׁיב...')
-  gNoteSeq += getRandomIntInclusive(1, 4)
+  flashMsg('נָא לְהַקְשִׁיב...');
+  gNoteSeq += getRandomIntInclusive(1, 4);
   for (let i = 0; i < gNoteSeq.length; i++) {
     setTimeout(() => {
-      const note = gNoteSeq.charAt(i)
-      const el = document.querySelector(`.game-container > button:nth-child(${note})`)
-      playNote(el, note)
-    }, (i + 1) * gAudioLength)
+      const note = gNoteSeq.charAt(i);
+      const el = document.querySelector(
+        `.game-container > button:nth-child(${note})`
+      );
+      playNote(el, note);
+    }, (i + 1) * gAudioLength);
   }
 
   setTimeout(() => {
@@ -79,8 +88,8 @@ function setUserTurn() {
 }
 
 function onUserPress(elBtn) {
-  if (!gIsUserTurn) return
-  const note = gNoteSeq[gUserCurrNoteIdx]
+  if (!gIsUserTurn) return;
+  const note = gNoteSeq[gUserCurrNoteIdx];
 
   // user lost:
   if (elBtn.innerText !== note) {
@@ -99,6 +108,15 @@ function onUserPress(elBtn) {
 
   // is it the last note in the sequence?
   if (gUserCurrNoteIdx === gNoteSeq.length - 1) {
+    gCountWinning++;
+    let maxLevelsInARow = localStorage.getItem('maxLevelsInARow');
+    console.log(gCountWinning);
+
+    if (maxLevelsInARow < gCountWinning) {
+      goodJob('שברת שיא בכמות השלבים שניצחת רצוף ! עוד כוכבב');
+      localStorage.setItem('maxLevelsInARow', gCountWinning);
+    }
+
     clearInterval(gSkipIntervalId);
     gIsUserTurn = false;
     gLevel++;
@@ -141,7 +159,7 @@ function onUsePowerup(powerup) {
 
   switch (powerup) {
     case 'next-note': {
-      onTapNextNote()
+      onTapNextNote();
       break;
     }
     case 'skip-level': {
@@ -160,14 +178,14 @@ function onTapNextNote() {
 }
 
 function playNote(elBtn, note) {
-  const audioNote = gAudioNotes[note - 1]
-  audioNote.pause()
-  audioNote.currentTime = 0
-  audioNote.play()
-  elBtn.classList.add('pressed')
+  const audioNote = gAudioNotes[note - 1];
+  audioNote.pause();
+  audioNote.currentTime = 0;
+  audioNote.play();
+  elBtn.classList.add('pressed');
   setTimeout(() => {
-    elBtn.classList.remove('pressed')
-  }, 500)
+    elBtn.classList.remove('pressed');
+  }, 500);
 }
 
 function breakScreen() {
@@ -202,24 +220,28 @@ function goodJob(txt) {
   console.log(elStars);
   elHealine.innerText = txt;
   elModal.classList.add('show');
+  gIsUserTurn === false;
   setTimeout(() => {
     elModal.classList.remove('show');
-  }, 1200);
+    !gIsUserTurn;
+  }, 3000);
 }
 
 function onSelectLevel(val) {
-  gBalloonsNums = val
-  gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2)
-  onStart()
+  gBalloonsNums = val;
+  gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2);
+  onStart();
 }
 
 function renderBalloonsNums() {
   const gameContainer = document.querySelector('.game-container');
-  gameContainer.innerHTML = ''
+  gameContainer.innerHTML = '';
 
-  var strHTML = ''
+  var strHTML = '';
   for (var i = 0; i < gBalloonsNums; i++) {
-    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1}</button>`
+    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${
+      i + 1
+    }</button>`;
   }
-  gameContainer.innerHTML = strHTML
+  gameContainer.innerHTML = strHTML;
 }
