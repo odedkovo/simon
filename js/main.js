@@ -6,12 +6,12 @@ const gAudioWrong = new Audio('sound/wrong.mp3')
 const gAudioCheer = new Audio('sound/cheer.mp3')
 const gAudioBreak = new Audio('sound/broken.mp3')
 const gAudioNotes = [
-    new Audio('sound/note/1.mp3'),
-    new Audio('sound/note/2.mp3'),
-    new Audio('sound/note/3.mp3'),
-    new Audio('sound/note/4.mp3'),
-]
-const gAudioLength = 1200
+  new Audio('sound/note/1.mp3'),
+  new Audio('sound/note/2.mp3'),
+  new Audio('sound/note/3.mp3'),
+  new Audio('sound/note/4.mp3'),
+];
+var gAudioLength = 1200;
 
 // Don't scare that kid
 gAudioBreak.volume = 0.05
@@ -32,12 +32,14 @@ var gTime = 0
 var gLevel = 1
 var gStars = 0
 var gPowerups
+let gCountWinning = 0;
 
-gAudioPowerup.volume = 0.05
-gAudioBreak.volume = 0.05
-gAudioRight.volume = 0.05
-gAudioWrong.volume = 0.05
-gAudioCheer.volume = 0.1
+gAudioPowerup.volume = 0.05;
+gAudioBreak.volume = 0.05;
+gAudioRight.volume = 0.05;
+gAudioWrong.volume = 0.05;
+gAudioCheer.volume = 0.1;
+var gBalloonsNums;
 
 function onInit() {
     document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
@@ -54,6 +56,7 @@ function renderPowerups() {
 }
 
 function onStart() {
+    if (gBalloonsNums) renderBalloonsNums();
     gGameScore = 0
     gIsUserTurn = false
     document.querySelector('.score').innerText = gGameScore
@@ -118,7 +121,16 @@ function onUserPress(elBtn) {
 
     // is it the last note in the sequence?
     if (gUserCurrNoteIdx === gNoteSeq.length - 1) {
-        clearInterval(gSkipIntervalId)
+        gCountWinning++;
+    let maxLevelsInARow = localStorage.getItem('maxLevelsInARow');
+    console.log(gCountWinning);
+
+    if (maxLevelsInARow < gCountWinning) {
+      goodJob('שברת שיא בכמות השלבים שניצחת רצוף ! עוד כוכבב');
+      localStorage.setItem('maxLevelsInARow', gCountWinning);
+    }
+
+    clearInterval(gSkipIntervalId)
 
         if(gLevel % 2 === 0) {
             addRandomPowerup()
@@ -240,22 +252,43 @@ function flashMsg(msg) {
 }
 
 function goodJob(txt) {
-    gStars++
-    let elModal = document.querySelector('.modal')
-    let elHealine = document.querySelector('.good-job-headline')
-    let elStars = document.querySelector('.stars')
-    let strForStarImg = ''
-    for (let i = 0; i < gStars; i++) {
-        strForStarImg += '<img src="img/star.png" height="50" width="50" alt="" />'
-    }
-    console.log(strForStarImg)
-    elStars.innerHTML = strForStarImg
-    console.log(elStars)
-    elHealine.innerText = txt
-    elModal.classList.add('show')
-    setTimeout(() => {
-        elModal.classList.remove('show')
-    }, 1200)
+  gStars++;
+  let elModal = document.querySelector('.modal');
+  let elHealine = document.querySelector('.good-job-headline');
+  let elStars = document.querySelector('.stars');
+  let strForStarImg = '';
+  for (let i = 0; i < gStars; i++) {
+    strForStarImg += '<img src="img/star.png" height="50" width="50" alt="" />';
+  }
+  console.log(strForStarImg);
+  elStars.innerHTML = strForStarImg;
+  console.log(elStars);
+  elHealine.innerText = txt;
+  elModal.classList.add('show');
+  gIsUserTurn === false;
+  setTimeout(() => {
+    elModal.classList.remove('show');
+    !gIsUserTurn;
+  }, 3000);
+}
+
+function onSelectLevel(val) {
+  gBalloonsNums = val;
+  gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2);
+  onStart();
+}
+
+function renderBalloonsNums() {
+  const gameContainer = document.querySelector('.game-container');
+  gameContainer.innerHTML = '';
+
+  var strHTML = '';
+  for (var i = 0; i < gBalloonsNums; i++) {
+    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${
+      i + 1
+    }</button>`;
+  }
+  gameContainer.innerHTML = strHTML;
 }
 
 function _createPowerups() {
