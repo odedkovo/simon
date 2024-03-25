@@ -30,6 +30,7 @@ let gChallengeInterval;
 let gLevel = 1;
 let gStars = 0;
 var gSkipIntervalId;
+
 gAudioPowerup.volume = 0.05;
 gAudioBreak.volume = 0.05;
 gAudioRight.volume = 0.05;
@@ -107,6 +108,7 @@ function onUserPress(elBtn) {
 
   // is it the last note in the sequence?
   if (gUserCurrNoteIdx === gNoteSeq.length - 1) {
+    clearInterval(gSkipIntervalId);
     gIsUserTurn = false;
     gLevel++;
 
@@ -122,7 +124,7 @@ function onUserPress(elBtn) {
         );
       }
 
-      // user broke his record
+    //   user broke his record
       if (gGameScore > gTopScore && gGameScore > 4) {
         gTopScore = gGameScore;
         document.querySelector('.top-score').innerText = gTopScore;
@@ -148,15 +150,11 @@ function onUsePowerup(powerup) {
 
   switch (powerup) {
     case 'next-note': {
-      const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx);
-      const elBtn = document.querySelector(
-        `.game-container > button:nth-child(${nextNote})`
-      );
-      onUserPress(elBtn);
+      onTapNextNote()
       break;
     }
     case 'skip-level': {
-      gSkipIntervalId = setInterval(onTapNextNote, 500);
+      gSkipIntervalId = setInterval(onTapNextNote, 700);
       break;
     }
   }
@@ -168,11 +166,6 @@ function onTapNextNote() {
     `.game-container > button:nth-child(${nextNote})`
   );
   onUserPress(elBtn);
-}
-
-function onSkipLevel() {
-  gAudioPowerup.play();
-  gSkipIntervalId = setInterval(onTapNextNote, 500);
 }
 
 function playNote(elBtn, note) {
