@@ -71,7 +71,7 @@ button {
 
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 30px;
 
     border: 1px solid black;
     border-radius: 10px;
@@ -79,6 +79,23 @@ button {
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.692);
     background-color: rgba(240, 255, 255, 0.694);
     margin-block-start: 10px;
+}
+
+.powerups-list > li {
+    position: relative;
+}
+
+.powerups-list > li .powerup-count {
+    position: absolute;
+    bottom: -5px;
+    left: -10px;
+    
+    color: rgb(64, 255, 0);
+    background-color: black;
+    padding: 1px;
+    border-radius: 1rem;
+    font-size: 1.7rem;
+    text-shadow: 0px 0px 4px black;
 }
 
 .powerups-list > li img {
