@@ -128,9 +128,6 @@ function setUserTurn() {
 }
 
 function onUserPress(elBtn) {
-    console.log('gGameScore:', gGameScore)
-    console.log('gTopScore:', gTopScore)
-
     if (!gIsUserTurn) return
     const note = gNoteSeq[gUserCurrNoteIdx]
 
@@ -304,12 +301,11 @@ function goodJob(txt) {
     }
     elStars.innerHTML = strForStarImg
     elHealine.innerText = txt
-    elModal.classList.add('show')
+    elModal.classList.add('show', 'small')
     gIsUserTurn === false
     setTimeout(() => {
-        elModal.classList.remove('show')
-        !gIsUserTurn
-    }, 3000)
+        elModal.classList.remove('show', 'small')
+    }, 3500)
 }
 
 function onSelectLevel(val) {
