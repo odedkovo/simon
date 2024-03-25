@@ -1,0 +1,131 @@
+body {
+    background-color: #222;
+    color: whitesmoke;
+    text-align: center;
+    direction: rtl;
+    max-width: 600px;
+    margin: auto;
+    overflow: hidden;
+    user-select: none;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2,
+h3 {
+    color: gray;
+}
+
+h2 span,
+h3 span {
+    color: whitesmoke;
+}
+
+button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap-reverse;
+}
+
+.game-container>button {
+    background-color: #555;
+    border: 20px solid #222;
+    font-size: 2em;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.game-container>button:nth-child(1) {
+    background: radial-gradient(circle, rgba(241, 241, 244, 1) 0%, rgba(23, 133, 50, 1) 66%, rgba(15, 65, 34, 1) 100%);
+}
+
+.game-container>button:nth-child(2) {
+    background: radial-gradient(circle, rgba(241, 241, 244, 1) 0%, rgba(191, 91, 74, 1) 66%, rgba(238, 21, 18, 1) 100%);
+}
+
+.game-container>button:nth-child(3) {
+    background: radial-gradient(circle, rgba(241, 241, 244, 1) 0%, rgba(23, 132, 133, 1) 66%, rgba(0, 212, 255, 1) 100%);
+}
+
+.game-container>button:nth-child(4) {
+    background: radial-gradient(circle, rgba(241, 241, 244, 1) 0%, rgba(224, 224, 118, 1) 66%, rgba(230, 220, 9, 1) 100%);
+}
+
+.game-container>button.pressed {
+    border: 20px solid rgba(32, 33, 23, 0.5);
+}
+
+.broken {
+    display: none;
+    width: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.user-msg {
+    opacity: 0;
+    padding: .6em;
+    transition: .5s;
+    margin: 1em 0;
+}
+
+.user-msg.show {
+    opacity: 1;
+    background-color: black;
+}
+
+.modal {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 1em 0;
+    opacity: 0;
+    width: 100vw;
+    height: 80vh;
+    transition: opacity .8s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    z-index: -1;
+    margin: 0;
+}
+
+.modal img {
+    display: block;
+    margin: auto;
+    max-width: 80%;
+}
+
+.modal.show {
+    opacity: 1;
+    background-color: black;
+    z-index: 1;
+}
+
+.modal button {
+    margin-top: 1em;
+    font-size: 1em;
+    background-color: purple;
+    border-radius: .2em;
+    border: 0;
+    padding: 1em 2em;
+    transition: .5s;
+}
+
+.modal button:hover {
+    scale: 1.1;
+    color: white;
+    background-color: rgb(82, 5, 82);
+}
