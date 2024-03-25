@@ -10,7 +10,7 @@ const gAudioNotes = [
     new Audio('sound/note/3.mp3'),
     new Audio('sound/note/4.mp3')
 ]
-const gAudioLength = 1200
+var gAudioLength = 1200
 
 // Don't scare that kid
 gAudioBreak.volume = 0.05
@@ -24,12 +24,17 @@ var gGameScore
 var gIsUserTurn
 var gNoteSeq // string of note numbers - example: '1214'
 var gUserCurrNoteIdx // index of note in gNoteSeq that user should click next
+var gBalloonsNums
 
 function onInit() {
     document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
+    gBalloonsNums = 4
 }
 
 function onStart() {
+
+    if (gBalloonsNums) renderBalloonsNums()
+
     gGameScore = 0
     gIsUserTurn = false
     document.querySelector('.score').innerText = gGameScore
@@ -41,11 +46,13 @@ function onStart() {
 }
 
 function playComputer() {
+    console.log('play computer');
     flashMsg('נָא לְהַקְשִׁיב...')
-    gNoteSeq += getRandomIntInclusive(1, 4)
+    gNoteSeq += getRandomIntInclusive(1, gBalloonsNums || 4)
     for (let i = 0; i < gNoteSeq.length; i++) {
         setTimeout(() => {
             const note = gNoteSeq.charAt(i)
+            console.log('note', note)
             const el = document.querySelector(`.game-container > button:nth-child(${note})`)
             playNote(el, note)
         }, (i + 1) * gAudioLength)
@@ -63,6 +70,7 @@ function setUserTurn() {
 }
 
 function onUserPress(elBtn) {
+    console.log('elBtn', elBtn)
     if (!gIsUserTurn) return
     const note = gNoteSeq[gUserCurrNoteIdx]
 
@@ -112,7 +120,8 @@ function onUserPress(elBtn) {
 }
 
 function playNote(elBtn, note) {
-    const audioNote = gAudioNotes[note - 1]
+    console.log('gAudioNotes[note - 1]', gAudioNotes[note - 1])
+    const audioNote = gAudioNotes[note - 1] || gAudioNotes[getRandomIntInclusive(0, 3)]
     audioNote.pause()
     audioNote.currentTime = 0
     audioNote.play()
@@ -138,4 +147,23 @@ function flashMsg(msg) {
     setTimeout(() => {
         elMsg.classList.remove('show')
     }, 1500)
+}
+
+function onSelectLevel(val) {
+    gBalloonsNums = val
+    gAudioLength = gAudioLength / Math.sqrt(gBalloonsNums)
+    console.log('gAudioLength', gAudioLength)
+    console.log('gBalloonsNums', gBalloonsNums)
+    onStart()
+}
+
+function renderBalloonsNums() {
+    const gameContainer = document.querySelector('.game-container');
+    gameContainer.innerHTML = ''; // Clear existing buttons
+
+    var strHTML = '';
+    for (var i = 0; i < gBalloonsNums; i++) {
+        strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1}</button>`;
+    }
+    gameContainer.innerHTML = strHTML; // Render new buttons
 }
