@@ -11,6 +11,7 @@
       type="image/x-icon"
     />
   </head>
+
   <body onload="onInit()">
     <h1>סָיימוֹן</h1>
     <section class="game-container">
@@ -19,6 +20,31 @@
       <button onclick="onUserPress(this)">3</button>
       <button onclick="onUserPress(this)">4</button>
     </section>
+    <ul class="powerups-list">
+      <li>
+        <img
+          src="img/p3.png"
+          alt="powerup img"
+          title="Tap next note"
+          onclick="onUsePowerup('next-note')"
+        />
+      </li>
+      <li>
+        <img
+          src="img/p2.png"
+          alt="powerup img"
+          title="Skip to next level"
+          onclick="onUsePowerup('skip-level')"
+        />
+      </li>
+      <li>
+        <img
+          src="img/p1.png"
+          alt="powerup img"
+          title="Slow down next level note play"
+        />
+      </li>
+    </ul>
     <section class="user-msg"></section>
     <h2>
       ניקוד:

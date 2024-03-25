@@ -1,5 +1,6 @@
 'use strict';
 
+const gAudioPowerup = new Audio('sound/powerup.mp3');
 const gAudioRight = new Audio('sound/right.mp3');
 const gAudioWrong = new Audio('sound/wrong.mp3');
 const gAudioCheer = new Audio('sound/cheer.mp3');
@@ -25,9 +26,15 @@ var gIsUserTurn;
 var gNoteSeq; // string of note numbers - example: '1214'
 var gUserCurrNoteIdx; // index of note in gNoteSeq that user should click next
 let gTime = 0;
-let gInterval;
+let gChallengeInterval;
 let gLevel = 1;
 let gStars = 0;
+var gSkipIntervalId;
+gAudioPowerup.volume = 0.05;
+gAudioBreak.volume = 0.05;
+gAudioRight.volume = 0.05;
+gAudioWrong.volume = 0.05;
+gAudioCheer.volume = 0.1;
 
 function onInit() {
   document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(
@@ -48,7 +55,7 @@ function onStart() {
   document.querySelector('.modal').classList.remove('show');
   gNoteSeq = '';
 
-  gInterval = setInterval(() => {
+  gChallengeInterval = setInterval(() => {
     gTime += 1000;
   }, 1000);
 
@@ -57,6 +64,7 @@ function onStart() {
 
 function playComputer() {
   flashMsg('נָא לְהַקְשִׁיב...');
+  clearInterval(gSkipIntervalId);
   gNoteSeq += getRandomIntInclusive(1, 4);
   for (let i = 0; i < gNoteSeq.length; i++) {
     setTimeout(() => {
@@ -84,7 +92,7 @@ function onUserPress(elBtn) {
 
   // user lost:
   if (elBtn.innerText !== note) {
-    clearInterval(gInterval);
+    clearInterval(gChallengeInterval);
     flashMsg('אוּפְּסִי...');
     breakScreen();
     setTimeout(() => {
@@ -133,6 +141,38 @@ function onUserPress(elBtn) {
   } else {
     gUserCurrNoteIdx++;
   }
+}
+
+function onUsePowerup(powerup) {
+  gAudioPowerup.play();
+
+  switch (powerup) {
+    case 'next-note': {
+      const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx);
+      const elBtn = document.querySelector(
+        `.game-container > button:nth-child(${nextNote})`
+      );
+      onUserPress(elBtn);
+      break;
+    }
+    case 'skip-level': {
+      gSkipIntervalId = setInterval(onTapNextNote, 500);
+      break;
+    }
+  }
+}
+
+function onTapNextNote() {
+  const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx);
+  const elBtn = document.querySelector(
+    `.game-container > button:nth-child(${nextNote})`
+  );
+  onUserPress(elBtn);
+}
+
+function onSkipLevel() {
+  gAudioPowerup.play();
+  gSkipIntervalId = setInterval(onTapNextNote, 500);
 }
 
 function playNote(elBtn, note) {
