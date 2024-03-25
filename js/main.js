@@ -24,6 +24,7 @@ var gGameScore
 var gIsUserTurn
 var gNoteSeq // string of note numbers - example: '1214'
 var gUserCurrNoteIdx // index of note in gNoteSeq that user should click next
+var gSkipIntervalId
 
 function onInit() {
     document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
@@ -42,6 +43,7 @@ function onStart() {
 
 function playComputer() {
     flashMsg('נָא לְהַקְשִׁיב...')
+    clearInterval(gSkipIntervalId)
     gNoteSeq += getRandomIntInclusive(1, 4)
     for (let i = 0; i < gNoteSeq.length; i++) {
         setTimeout(() => {
@@ -116,6 +118,10 @@ function onTapNextNote() {
     const elBtn = document.querySelector(`.game-container > button:nth-child(${nextNote})`)
 
     onUserPress(elBtn)
+}
+
+function onSkipLevel() {
+    gSkipIntervalId = setInterval(onTapNextNote, 500)
 }
 
 function playNote(elBtn, note) {
