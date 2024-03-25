@@ -111,6 +111,13 @@ function onUserPress(elBtn) {
     }
 }
 
+function onTapNextNote() {
+    const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx)
+    const elBtn = document.querySelector(`.game-container > button:nth-child(${nextNote})`)
+
+    onUserPress(elBtn)
+}
+
 function playNote(elBtn, note) {
     const audioNote = gAudioNotes[note - 1]
     audioNote.pause()
