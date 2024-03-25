@@ -1,17 +1,19 @@
 'use strict'
 
+const PLAYERS_KEY = 'playerDB'
+const gPlayers = loadFromLocalStorage(PLAYERS_KEY) || []
+
 const gAudioPowerup = new Audio('sound/powerup.mp3')
 const gAudioRight = new Audio('sound/right.mp3')
 const gAudioWrong = new Audio('sound/wrong.mp3')
 const gAudioCheer = new Audio('sound/cheer.mp3')
 const gAudioBreak = new Audio('sound/broken.mp3')
 const gAudioNotes = [
-  new Audio('sound/note/1.mp3'),
-  new Audio('sound/note/2.mp3'),
-  new Audio('sound/note/3.mp3'),
-  new Audio('sound/note/4.mp3'),
-];
-var gAudioLength = 1200;
+    new Audio('sound/note/1.mp3'),
+    new Audio('sound/note/2.mp3'),
+    new Audio('sound/note/3.mp3'),
+    new Audio('sound/note/4.mp3'),
+]
 
 // Don't scare that kid
 gAudioBreak.volume = 0.05
@@ -20,7 +22,7 @@ gAudioWrong.volume = 0.05
 gAudioCheer.volume = 0.1
 
 // Game state:
-var gTopScore = +localStorage.getItem('topScore') || 0
+var gTopScore = loadFromLocalStorage('topScore') || 0
 var gGameScore
 var gIsUserTurn
 var gIsSlowTime
@@ -32,14 +34,15 @@ var gTime = 0
 var gLevel = 1
 var gStars = 0
 var gPowerups
-let gCountWinning = 0;
+let gCountWinning = 0
+var gAudioLength = 1200
+var gBalloonsNums
 
-gAudioPowerup.volume = 0.05;
-gAudioBreak.volume = 0.05;
-gAudioRight.volume = 0.05;
-gAudioWrong.volume = 0.05;
-gAudioCheer.volume = 0.1;
-var gBalloonsNums;
+gAudioPowerup.volume = 0.05
+gAudioBreak.volume = 0.05
+gAudioRight.volume = 0.05
+gAudioWrong.volume = 0.05
+gAudioCheer.volume = 0.1
 
 function onInit() {
     document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
@@ -55,8 +58,29 @@ function renderPowerups() {
     document.querySelector('.powerups-list').innerHTML = strHTML
 }
 
+function renderLeaderboards() {
+    let strHTML = `
+        <tr>
+            <th>Level Reached</th>
+            <th>Player</th>
+        </tr>`
+
+    if (!gPlayers.length) {
+        strHTML += 'כרגע הטבלה ריקה, אבל אנחנו בטוחים שאתה הראשון שיכנס אליה!'
+    } else {
+        strHTML += gPlayers.map(player => `
+            <tr>
+                <td>${player.record}</td>
+                <td>${player.name}</td>
+            </tr>
+        `).join('')
+    }
+
+    document.querySelector('.leaderboards').innerHTML = strHTML
+}
+
 function onStart() {
-    if (gBalloonsNums) renderBalloonsNums();
+    if (gBalloonsNums) renderBalloonsNums()
     gGameScore = 0
     gIsUserTurn = false
     document.querySelector('.score').innerText = gGameScore
@@ -71,6 +95,7 @@ function onStart() {
     }, 1000)
 
     renderPowerups()
+    renderLeaderboards()
     playComputer()
 }
 
@@ -112,6 +137,13 @@ function onUserPress(elBtn) {
         setTimeout(() => {
             gAudioWrong.play()
             document.querySelector('.modal').classList.add('show')
+            if (gGameScore > gTopScore) {
+                const isConfirm = confirm('לא יודע מה סיימון אמר מה הוא לא אמר, אתה אלוף! תרצה להיכנס לטבלה שלנו?')
+                if(isConfirm) {
+                    const userName = prompt('מה שמך בישראל?')
+                    addUserToLeaderboards(userName)
+                }
+            }
         }, 3000)
         return
     }
@@ -121,18 +153,17 @@ function onUserPress(elBtn) {
 
     // is it the last note in the sequence?
     if (gUserCurrNoteIdx === gNoteSeq.length - 1) {
-        gCountWinning++;
-    let maxLevelsInARow = localStorage.getItem('maxLevelsInARow');
-    console.log(gCountWinning);
+        gCountWinning++
+        let maxLevelsInARow = loadFromLocalStorage('maxLevelsInARow')
 
-    if (maxLevelsInARow < gCountWinning) {
-      goodJob('שברת שיא בכמות השלבים שניצחת רצוף ! עוד כוכבב');
-      localStorage.setItem('maxLevelsInARow', gCountWinning);
-    }
+        if (maxLevelsInARow < gCountWinning) {
+            goodJob('שברת שיא בכמות השלבים שניצחת רצוף ! עוד כוכבב')
+            saveToLocalStorage('maxLevelsInARow', gCountWinning)
+        }
 
-    clearInterval(gSkipIntervalId)
+        clearInterval(gSkipIntervalId)
 
-        if(gLevel % 2 === 0) {
+        if (gLevel % 2 === 0) {
             addRandomPowerup()
             flashMsg('זכית בתמריץ חדש!')
         }
@@ -145,15 +176,14 @@ function onUserPress(elBtn) {
             document.querySelector('.score').innerText = gGameScore
 
             if (gLevel === 3 && gTime < 1000 * 30) {
-                console.log('in the if')
                 goodJob('וואו!! הצלחת להגיע לשלב 3 בפחות משלושים שניות קיבלת כוכב')
             }
 
             // user broke his record
-            if (gGameScore > gTopScore && gGameScore > 4) {
+            if (gGameScore > gTopScore && gGameScore > 2) {
                 gTopScore = gGameScore
                 document.querySelector('.top-score').innerText = gTopScore
-                localStorage.setItem('topScore', gTopScore)
+                saveToLocalStorage('topScore', gTopScore)
                 gAudioCheer.play()
                 flashMsg(getCheer())
             } else {
@@ -175,21 +205,21 @@ function onUsePowerup(powerupName) {
 
     switch (powerupName) {
         case 'next-note': {
-            if(!isAllowedToUse('next-note')) return
+            if (!isAllowedToUse('next-note')) return
             decrementPowerupCount('next-note')
             onTapNextNote()
             gAudioPowerup.play()
             break
         }
         case 'skip-level': {
-            if(!isAllowedToUse('skip-level')) return
+            if (!isAllowedToUse('skip-level')) return
             decrementPowerupCount('skip-level')
             gSkipIntervalId = setInterval(onTapNextNote, 700)
             gAudioPowerup.play()
             break
         }
         case 'slow-time': {
-            if(!isAllowedToUse('slow-time')) return
+            if (!isAllowedToUse('slow-time')) return
             decrementPowerupCount('slow-time')
             gIsSlowTime = true
             gAudioPowerup.play()
@@ -210,16 +240,25 @@ function decrementPowerupCount(powerupName) {
 }
 
 function addRandomPowerup() {
-    const randIdx = getRandomIntInclusive(0, gPowerups.length-1)
+    const randIdx = getRandomIntInclusive(0, gPowerups.length - 1)
     gPowerups[randIdx].count++
     renderPowerups()
 }
 
+function addUserToLeaderboards(name) {
+    gPlayers.unshift({ name, record: gGameScore })
+    saveToLocalStorage(PLAYERS_KEY, gPlayers)
+}
+
 function onTapNextNote() {
     const nextNote = gNoteSeq.charAt(gUserCurrNoteIdx)
-    const elBtn = document.querySelector(`.game-container > button:nth-child(${nextNote})`)
+    const elBtn = getElBtn(nextNote)
 
     onUserPress(elBtn)
+}
+
+function getElBtn(note) {
+    return document.querySelector(`.game-container > button:nth-child(${note})`)
 }
 
 function playNote(elBtn, note) {
@@ -252,43 +291,45 @@ function flashMsg(msg) {
 }
 
 function goodJob(txt) {
-  gStars++;
-  let elModal = document.querySelector('.modal');
-  let elHealine = document.querySelector('.good-job-headline');
-  let elStars = document.querySelector('.stars');
-  let strForStarImg = '';
-  for (let i = 0; i < gStars; i++) {
-    strForStarImg += '<img src="img/star.png" height="50" width="50" alt="" />';
-  }
-  console.log(strForStarImg);
-  elStars.innerHTML = strForStarImg;
-  console.log(elStars);
-  elHealine.innerText = txt;
-  elModal.classList.add('show');
-  gIsUserTurn === false;
-  setTimeout(() => {
-    elModal.classList.remove('show');
-    !gIsUserTurn;
-  }, 3000);
+    gStars++
+    let elModal = document.querySelector('.modal')
+    let elHealine = document.querySelector('.good-job-headline')
+    let elStars = document.querySelector('.stars')
+    let strForStarImg = ''
+    for (let i = 0; i < gStars; i++) {
+        strForStarImg += '<img src="img/star.png" height="50" width="50" alt="" />';
+    }
+    elStars.innerHTML = strForStarImg
+    elHealine.innerText = txt
+    elModal.classList.add('show')
+    gIsUserTurn === false
+    setTimeout(() => {
+        elModal.classList.remove('show')
+        !gIsUserTurn
+    }, 3000)
 }
 
 function onSelectLevel(val) {
-  gBalloonsNums = val;
-  gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2);
-  onStart();
+    gBalloonsNums = val
+    gAudioLength = gAudioLength / Math.pow(gBalloonsNums, 1 / 2)
+    onStart()
 }
 
 function renderBalloonsNums() {
-  const gameContainer = document.querySelector('.game-container');
-  gameContainer.innerHTML = '';
+    const gameContainer = document.querySelector('.game-container')
+    gameContainer.innerHTML = ''
 
-  var strHTML = '';
-  for (var i = 0; i < gBalloonsNums; i++) {
-    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${
-      i + 1
-    }</button>`;
-  }
-  gameContainer.innerHTML = strHTML;
+    var strHTML = ''
+    for (var i = 0; i < gBalloonsNums; i++) {
+        strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1
+            }</button>`
+    }
+    gameContainer.innerHTML = strHTML
+}
+
+function onToggleLeaderboards() {
+    document.querySelector('.leaderboards-container').classList.toggle('show')
+    document.querySelector('.backdrop').classList.toggle('show')
 }
 
 function _createPowerups() {

@@ -82,15 +82,15 @@ button {
     margin-block-start: 10px;
 }
 
-.powerups-list > li {
+.powerups-list>li {
     position: relative;
 }
 
-.powerups-list > li .powerup-count {
+.powerups-list>li .powerup-count {
     position: absolute;
     bottom: -5px;
     left: -10px;
-    
+
     color: rgb(64, 255, 0);
     background-color: black;
     padding: 1px;
@@ -99,13 +99,13 @@ button {
     text-shadow: 0px 0px 4px black;
 }
 
-.powerups-list > li img {
+.powerups-list>li img {
     width: 50px;
     transition: scale 0.3s, opacity 0.3s;
     cursor: pointer;
 }
 
-.powerups-list > li img:hover {
+.powerups-list>li img:hover {
     scale: 1.07;
     opacity: 0.9;
 }
@@ -129,6 +129,13 @@ button {
 .user-msg.show {
     opacity: 1;
     background-color: black;
+}
+
+.diff-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
 .modal {
@@ -174,4 +181,77 @@ button {
     scale: 1.1;
     color: white;
     background-color: rgb(82, 5, 82);
+}
+
+.leaderboards-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    pointer-events: none;
+    width: 50vw;
+    max-height: 70vh;
+    opacity: 0;
+    transition: opacity .8s;
+}
+
+.leaderboards {
+    width: 100%;
+    overflow-y: auto;
+    color: black;
+    border-collapse: collapse;
+    font-size: 1.5rem;
+}
+
+.leaderboards-container.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.leaderboards-container .btn-close {
+    position: absolute;
+    right: 5px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: red;
+}
+
+.btn-leaderboards {
+    font-size: 1.2rem;
+    padding: 0.5em;
+    border-radius: 10px;
+}
+
+.leaderboards th,
+.leaderboards td {
+    border: 1px solid #03070b;
+    padding: 8px;
+    text-align: left;
+}
+
+.leaderboards tr:nth-child(odd) {
+    background-color: lightcyan;
+}
+
+.leaderboards tr:nth-child(even) {
+    background-color: lightgoldenrodyellow;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .8s;
+    cursor: pointer;
+}
+
+.backdrop.show {
+    opacity: 0.6;
+    pointer-events: auto;
 }

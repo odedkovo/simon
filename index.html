@@ -22,6 +22,8 @@
 </head>
 
 <body onload="onInit()">
+  <div class="backdrop" onclick="onToggleLeaderboards()"></div>
+
   <h1>סָיימוֹן</h1>
 
   <section class="game-container">
@@ -42,7 +44,8 @@
     שיא:
     <span class="top-score">0</span>
   </h3>
-  <div>
+  <div class="diff-container">
+    <h3>בחר רמה:</h3>
     <select onchange="onSelectLevel(+this.value)">
       <option>4</option>
       <option>5</option>
@@ -61,7 +64,15 @@
   <section class="stars"></section>
   <img src="img/broken.png" class="broken" />
 
+  <section class="leaderboards-container">
+    <button class="btn-close" onclick="onToggleLeaderboards()">✖</button>
+    <table class="leaderboards"></table>
+  </section>
+
+  <button class="btn-leaderboards" onclick="onToggleLeaderboards()">🏆טבלת האלופים שלנו🏆</button>
+
   <script src="js/util.service.js"></script>
+  <script src="js/storage-service.js"></script>
   <script src="js/main.js"></script>
 </body>
 
