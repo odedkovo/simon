@@ -22,7 +22,7 @@ gAudioWrong.volume = 0.05
 gAudioCheer.volume = 0.1
 
 // Game state:
-var gTopScore = loadFromLocalStorage('topScore') || 0
+var gTopScore
 var gGameScore
 var gIsUserTurn
 var gIsSlowTime
@@ -80,20 +80,22 @@ function renderLeaderboards() {
 }
 
 function onStart() {
-    if (gBalloonsNums) renderBalloonsNums()
     gGameScore = 0
+    gNoteSeq = ''
     gIsUserTurn = false
+    gTopScore = loadFromLocalStorage('topScore') || 0
+    gPowerups = _createPowerups()
+
     document.querySelector('.score').innerText = gGameScore
     document.querySelector('.top-score').innerText = gTopScore
     document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(1, 6)}.gif`
     document.querySelector('.modal').classList.remove('show')
-    gNoteSeq = ''
-    gPowerups = _createPowerups()
-
+    
     gChallengeInterval = setInterval(() => {
         gTime += 1000
     }, 1000)
-
+    
+    if (gBalloonsNums) renderBalloonsNums()
     renderPowerups()
     renderLeaderboards()
     playComputer()
@@ -126,6 +128,9 @@ function setUserTurn() {
 }
 
 function onUserPress(elBtn) {
+    console.log('gGameScore:', gGameScore)
+    console.log('gTopScore:', gTopScore)
+
     if (!gIsUserTurn) return
     const note = gNoteSeq[gUserCurrNoteIdx]
 
@@ -137,7 +142,7 @@ function onUserPress(elBtn) {
         setTimeout(() => {
             gAudioWrong.play()
             document.querySelector('.modal').classList.add('show')
-            if (gGameScore > gTopScore) {
+            if (gGameScore > gTopScore && gGameScore > 2) {
                 const isConfirm = confirm('לא יודע מה סיימון אמר מה הוא לא אמר, אתה אלוף! תרצה להיכנס לטבלה שלנו?')
                 if(isConfirm) {
                     const userName = prompt('מה שמך בישראל?')
@@ -163,7 +168,7 @@ function onUserPress(elBtn) {
 
         clearInterval(gSkipIntervalId)
 
-        if (gLevel % 2 === 0) {
+        if (gLevel % 3 === 0) {
             addRandomPowerup()
             flashMsg('זכית בתמריץ חדש!')
         }
@@ -181,9 +186,7 @@ function onUserPress(elBtn) {
 
             // user broke his record
             if (gGameScore > gTopScore && gGameScore > 2) {
-                gTopScore = gGameScore
-                document.querySelector('.top-score').innerText = gTopScore
-                saveToLocalStorage('topScore', gTopScore)
+                saveToLocalStorage('topScore', gGameScore)
                 gAudioCheer.play()
                 flashMsg(getCheer())
             } else {
