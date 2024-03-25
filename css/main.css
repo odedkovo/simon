@@ -65,6 +65,34 @@ button {
     border: 20px solid rgba(32, 33, 23, 0.5);
 }
 
+.powerups-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.692);
+    background-color: rgba(240, 255, 255, 0.694);
+    margin-block-start: 10px;
+}
+
+.powerups-list > li img {
+    width: 50px;
+    transition: scale 0.3s, opacity 0.3s;
+    cursor: pointer;
+}
+
+.powerups-list > li img:hover {
+    scale: 1.07;
+    opacity: 0.9;
+}
+
 .broken {
     display: none;
     width: 100%;
