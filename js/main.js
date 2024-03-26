@@ -56,7 +56,8 @@ function onInit() {
 function renderPowerups() {
   const strHTML = gPowerups
     .map(
-      (powerup) => `
+      (powerup) =>
+        `
         <li>
             <img src="${powerup.imgUrl}" alt="powerup img" title="${powerup.title}" onclick="onUsePowerup('${powerup.name}')" />
             <span class="powerup-count">${powerup.count}</span>
@@ -75,6 +76,7 @@ function renderLeaderboards() {
         </tr>`;
 
   if (!gPlayers.length) {
+    <tr></tr>;
     strHTML += 'כרגע הטבלה ריקה, אבל אנחנו בטוחים שאתה הראשון שיכנס אליה!';
   } else {
     strHTML += gPlayers
@@ -107,10 +109,8 @@ function onStart() {
   )}.gif`;
   document.querySelector('.modal').classList.remove('show');
   document.querySelector('.action-container').classList.remove('none');
-  let elTimer = document.querySelector('.timer-modal');
+
   gChallengeInterval = setInterval(() => {
-    let timeForHtml = getTime(gTime);
-    elTimer.innerHTML = `<span>${timeForHtml}</span>`;
     gTime += 1000;
   }, 1000);
 
@@ -202,10 +202,7 @@ function onUserPress(elBtn) {
       gGameScore++;
       document.querySelector('.score').innerText = gGameScore;
 
-      console.log('glevel', gLevel);
-      console.log('gTime', gTime);
       if (gLevel === 3 && gTime < 1000 * 30) {
-        console.log('in the if ');
         goodJob('וואו!! הצלחת להגיע לשלב 3 בפחות משלושים שניות קיבלת כוכב');
       }
 
@@ -350,8 +347,6 @@ function onSelectLevel(val) {
 }
 
 function renderBalloonsNums() {
-  // const gameContainer = document.querySelector('.game-container')
-  // gameContainer.innerHTML = ''
   var strHTML = '';
   for (var i = 0; i < gBalloonsNums; i++) {
     strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${
