@@ -210,7 +210,7 @@ button {
 .modal.show {
   opacity: 1;
   background-color: black;
-  z-index: 1;
+  pointer-events: auto;
 }
 
 .modal.show.small {

@@ -76,7 +76,6 @@ function renderLeaderboards() {
         </tr>`;
 
   if (!gPlayers.length) {
-    <tr></tr>;
     strHTML += 'כרגע הטבלה ריקה, אבל אנחנו בטוחים שאתה הראשון שיכנס אליה!';
   } else {
     strHTML += gPlayers
@@ -95,6 +94,7 @@ function renderLeaderboards() {
 }
 
 function onStart() {
+  console.log('on start');
   gGameScore = 0;
   gNoteSeq = '';
   gIsUserTurn = false;
@@ -109,8 +109,9 @@ function onStart() {
   )}.gif`;
   document.querySelector('.modal').classList.remove('show');
   document.querySelector('.action-container').classList.remove('none');
-
+  let elTimer = document.querySelector('.timer-modal');
   gChallengeInterval = setInterval(() => {
+    elTimer.innerHTML = `<span>${getTime(gTime)}</span>`;
     gTime += 1000;
   }, 1000);
 
