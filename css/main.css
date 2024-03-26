@@ -39,7 +39,7 @@ button {
   flex-wrap: wrap;
 }
 
-.game-container > button {
+.game-container>button {
   background-color: #555;
   border: 20px solid #222;
   font-size: 2em;
@@ -49,43 +49,35 @@ button {
   cursor: pointer;
 }
 
-.game-container > button:nth-child(1) {
-  background: radial-gradient(
-    circle,
-    rgba(241, 241, 244, 1) 0%,
-    rgba(23, 133, 50, 1) 66%,
-    rgba(15, 65, 34, 1) 100%
-  );
+.game-container>button:nth-child(1) {
+  background: radial-gradient(circle,
+      rgba(241, 241, 244, 1) 0%,
+      rgba(23, 133, 50, 1) 66%,
+      rgba(15, 65, 34, 1) 100%);
 }
 
-.game-container > button:nth-child(2) {
-  background: radial-gradient(
-    circle,
-    rgba(241, 241, 244, 1) 0%,
-    rgba(191, 91, 74, 1) 66%,
-    rgba(238, 21, 18, 1) 100%
-  );
+.game-container>button:nth-child(2) {
+  background: radial-gradient(circle,
+      rgba(241, 241, 244, 1) 0%,
+      rgba(191, 91, 74, 1) 66%,
+      rgba(238, 21, 18, 1) 100%);
 }
 
-.game-container > button:nth-child(3) {
-  background: radial-gradient(
-    circle,
-    rgba(241, 241, 244, 1) 0%,
-    rgba(23, 132, 133, 1) 66%,
-    rgba(0, 212, 255, 1) 100%
-  );
+.game-container>button:nth-child(3) {
+  background: radial-gradient(circle,
+      rgba(241, 241, 244, 1) 0%,
+      rgba(23, 132, 133, 1) 66%,
+      rgba(0, 212, 255, 1) 100%);
 }
 
-.game-container > button:nth-child(4) {
-  background: radial-gradient(
-    circle,
-    rgba(241, 241, 244, 1) 0%,
-    rgba(224, 224, 118, 1) 66%,
-    rgba(230, 220, 9, 1) 100%
-  );
+.game-container>button:nth-child(4) {
+  background: radial-gradient(circle,
+      rgba(241, 241, 244, 1) 0%,
+      rgba(224, 224, 118, 1) 66%,
+      rgba(230, 220, 9, 1) 100%);
 }
 
-.game-container > button.pressed {
+.game-container>button.pressed {
   border: 20px solid rgba(32, 33, 23, 0.5);
 }
 
@@ -106,11 +98,11 @@ button {
   margin-block-start: 10px;
 }
 
-.powerups-list > li {
+.powerups-list>li {
   position: relative;
 }
 
-.powerups-list > li .powerup-count {
+.powerups-list>li .powerup-count {
   position: absolute;
   bottom: -5px;
   left: -10px;
@@ -123,13 +115,13 @@ button {
   text-shadow: 0px 0px 4px black;
 }
 
-.powerups-list > li img {
+.powerups-list>li img {
   width: 50px;
   transition: scale 0.3s, opacity 0.3s;
   cursor: pointer;
 }
 
-.powerups-list > li img:hover {
+.powerups-list>li img:hover {
   scale: 1.07;
   opacity: 0.9;
 }
@@ -317,4 +309,24 @@ button {
 .backdrop.show {
   opacity: 0.6;
   pointer-events: auto;
+}
+
+.light-mode {
+  background: white;
+  color: black;
+}
+
+.dark-mode-container {
+  position: relative;
+  top: 0;
+  margin-top: 10px;
+}
+
+.action {
+  background-color: black;
+  color: white;
+}
+
+.dark-mode-text {
+  color: black
 }
