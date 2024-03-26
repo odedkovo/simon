@@ -350,9 +350,8 @@ function onSelectLevel(val) {
 function renderBalloonsNums() {
   var strHTML = '';
   for (var i = 0; i < gBalloonsNums; i++) {
-    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${
-      i + 1
-    }</button>`;
+    strHTML += `<button style="background-color: ${getRandomColor()}" onclick="onUserPress(this)">${i + 1
+      }</button>`;
   }
   document.querySelector('.game-container').innerHTML = strHTML;
 }
@@ -385,4 +384,21 @@ function getTime(time) {
   } else if (time >= 10) {
     return `${time / 1000}`;
   }
+}
+
+
+function onTogglDarkMode() {
+  const body = document.body
+  const elDarkModeBtn = document.querySelector('.dark-mode-container')
+  const elMsg = document.querySelector('.user-msg')
+  const h3Element = document.querySelector('h3')
+  const spanElements = document.querySelectorAll('span')
+
+  body.classList.toggle('light-mode')
+  elDarkModeBtn.classList.toggle('action')
+  elMsg.classList.toggle('action')
+  h3Element.classList.toggle('dark-mode-text')
+  spanElements.forEach(span => span.classList.toggle('dark-mode-text'))
+
+  elDarkModeBtn.innerText = body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode'
 }
