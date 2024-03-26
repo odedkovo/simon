@@ -27,50 +27,54 @@
   <h1>סָיימוֹן</h1>
 
   <section class="game-container">
-    <button onclick="onUserPress(this)">1</button>
+    <!-- <button onclick="onUserPress(this)">1</button>
     <button onclick="onUserPress(this)">2</button>
     <button onclick="onUserPress(this)">3</button>
-    <button onclick="onUserPress(this)">4</button>
+    <button onclick="onUserPress(this)">4</button> -->
   </section>
 
-  <ul class="powerups-list"></ul>
 
   <section class="user-msg"></section>
-  <h2>
-    ניקוד:
-    <span class="score">0</span>
-  </h2>
-  <h3>
-    שיא:
-    <span class="top-score">0</span>
-  </h3>
-  <div class="diff-container">
-    <h3>בחר רמה:</h3>
-    <select onchange="onSelectLevel(+this.value)">
-      <option>4</option>
-      <option>5</option>
-      <option>6</option>
-      <option>7</option>
-      <option>8</option>
-      <option>9</option>
-      <option>10</option>
-    </select>
-  </div>
+
+
   <section class="modal show">
     <h3 class="good-job-headline">יֵשׁ לָךְ זִכָּרוֹן טוֹב?</h3>
     <img src="img/go1.gif" />
     <button onclick="onStart(this)">קָדִימָה!</button>
   </section>
-  <section class="stars"></section>
-  <img src="img/broken.png" class="broken" />
 
-  <section class="leaderboards-container">
-    <button class="btn-close" onclick="onToggleLeaderboards()">✖</button>
-    <table class="leaderboards"></table>
-  </section>
+  <div class="action-container">
+    <ul class="powerups-list"></ul>
+    <h2>
+      ניקוד:
+      <span class="score">0</span>
+    </h2>
+    <h3>
+      שיא:
+      <span class="top-score">0</span>
+    </h3>
+    <div class="diff-container">
+      <h3>בחר רמה:</h3>
+      <select onchange="onSelectLevel(+this.value)">
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+      </select>
+    </div>
+    <section class="stars"></section>
+    <img src="img/broken.png" class="broken" />
 
-  <button class="btn-leaderboards" onclick="onToggleLeaderboards()">🏆טבלת האלופים שלנו🏆</button>
+    <section class="leaderboards-container">
+      <button class="btn-close" onclick="onToggleLeaderboards()">✖</button>
+      <table class="leaderboards"></table>
+    </section>
 
+    <button class="btn-leaderboards" onclick="onToggleLeaderboards()">🏆טבלת האלופים שלנו🏆</button>
+
+  </div>
   <script src="js/util.service.js"></script>
   <script src="js/storage-service.js"></script>
   <script src="js/main.js"></script>

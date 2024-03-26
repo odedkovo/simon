@@ -29,10 +29,14 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
+.none {
+    display: none;
+}
+
 .game-container {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
 }
 
 .game-container>button {
@@ -177,7 +181,7 @@ button {
     font-size: 2rem;
 }
 
-.modal.show.small button{
+.modal.show.small button {
     display: none;
 }
 
