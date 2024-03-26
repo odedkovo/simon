@@ -3,11 +3,12 @@
 const PLAYERS_KEY = 'playerDB';
 const gPlayers = loadFromLocalStorage(PLAYERS_KEY) || [];
 
-const gAudioPowerup = new Audio('sound/powerup.mp3');
-const gAudioRight = new Audio('sound/right.mp3');
-const gAudioWrong = new Audio('sound/wrong.mp3');
-const gAudioCheer = new Audio('sound/cheer.mp3');
-const gAudioBreak = new Audio('sound/broken.mp3');
+const gAudioPowerupAchieved = new Audio('sound/powerup-achieved.mp3')
+const gAudioPowerupUsed = new Audio('sound/powerup-used.mp3')
+const gAudioRight = new Audio('sound/right.mp3')
+const gAudioWrong = new Audio('sound/wrong.mp3')
+const gAudioCheer = new Audio('sound/cheer.mp3')
+const gAudioBreak = new Audio('sound/broken.mp3')
 const gAudioNotes = [
   new Audio('sound/note/1.mp3'),
   new Audio('sound/note/2.mp3'),
@@ -21,6 +22,8 @@ const gAudioNotes = [
 ];
 
 // Don't scare that kid
+gAudioPowerupAchieved.volume = 0.05
+gAudioPowerupUsed.volume = 0.05
 gAudioBreak.volume = 0.05;
 gAudioRight.volume = 0.05;
 gAudioWrong.volume = 0.05;
@@ -42,12 +45,6 @@ var gPowerups;
 let gCountWinning = 0;
 var gAudioLength = 1200;
 var gBalloonsNums = 4;
-
-gAudioPowerup.volume = 0.05;
-gAudioBreak.volume = 0.05;
-gAudioRight.volume = 0.05;
-gAudioWrong.volume = 0.05;
-gAudioCheer.volume = 0.1;
 
 function onInit() {
   document.querySelector('.modal img').src = `img/go${getRandomIntInclusive(
@@ -191,10 +188,12 @@ function onUserPress(elBtn) {
 
     clearInterval(gSkipIntervalId);
 
-    if (gLevel % 3 === 0) {
-      addRandomPowerup();
-      flashMsg('זכית בתמריץ חדש!');
-    }
+        if (gLevel % 3 === 0) {
+            document.querySelector('.user-msg').classList.add('powerup')
+            addRandomPowerup()
+            flashMsg('זכית בתמריץ חדש!')
+            gAudioPowerupAchieved.play()
+        }
 
     gIsUserTurn = false;
     gLevel++;
@@ -233,29 +232,29 @@ function onUserPress(elBtn) {
 function onUsePowerup(powerupName) {
   if (!gIsUserTurn) return;
 
-  switch (powerupName) {
-    case 'next-note': {
-      if (!isAllowedToUse('next-note')) return;
-      decrementPowerupCount('next-note');
-      onTapNextNote();
-      gAudioPowerup.play();
-      break;
+    switch (powerupName) {
+        case 'next-note': {
+            if (!isAllowedToUse('next-note')) return
+            decrementPowerupCount('next-note')
+            onTapNextNote()
+            gAudioPowerupUsed.play()
+            break
+        }
+        case 'skip-level': {
+            if (!isAllowedToUse('skip-level')) return
+            decrementPowerupCount('skip-level')
+            gSkipIntervalId = setInterval(onTapNextNote, 700)
+            gAudioPowerupUsed.play()
+            break
+        }
+        case 'slow-time': {
+            if (!isAllowedToUse('slow-time')) return
+            decrementPowerupCount('slow-time')
+            gIsSlowTime = true
+            gAudioPowerupUsed.play()
+            break
+        }
     }
-    case 'skip-level': {
-      if (!isAllowedToUse('skip-level')) return;
-      decrementPowerupCount('skip-level');
-      gSkipIntervalId = setInterval(onTapNextNote, 700);
-      gAudioPowerup.play();
-      break;
-    }
-    case 'slow-time': {
-      if (!isAllowedToUse('slow-time')) return;
-      decrementPowerupCount('slow-time');
-      gIsSlowTime = true;
-      gAudioPowerup.play();
-      break;
-    }
-  }
 }
 
 function isAllowedToUse(powerupName) {
@@ -312,12 +311,13 @@ function breakScreen() {
 }
 
 function flashMsg(msg) {
-  const elMsg = document.querySelector('.user-msg');
-  elMsg.innerText = msg;
-  elMsg.classList.add('show');
-  setTimeout(() => {
-    elMsg.classList.remove('show');
-  }, 1500);
+    const elMsg = document.querySelector('.user-msg')
+    elMsg.innerText = msg
+    elMsg.classList.add('show')
+    setTimeout(() => {
+        elMsg.classList.remove('show')
+        elMsg.classList.remove('powerup')
+    }, 1500)
 }
 
 function goodJob(txt) {

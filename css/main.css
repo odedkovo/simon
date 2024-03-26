@@ -156,6 +156,10 @@ button {
   background-color: black;
 }
 
+.user-msg.powerup {
+  background-color: rgb(1, 194, 1);
+}
+
 .diff-container {
   display: flex;
   justify-content: center;
@@ -213,9 +217,13 @@ button {
   top: 5px;
   left: 50%;
   translate: -50%;
-  width: 500px;
-  height: 400px;
+  width: 400px;
+  height: 300px;
   font-size: 2rem;
+}
+
+.modal.show.small img {
+  width: 50%;
 }
 
 .modal.show.small button {
