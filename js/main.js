@@ -35,7 +35,7 @@ var gNoteSeq; // string of note numbers - example: '1214'
 var gUserCurrNoteIdx; // index of note in gNoteSeq that user should click next
 var gChallengeInterval;
 var gSkipIntervalId;
-var gTime = 0;
+var gTime = 55000;
 var gLevel = 1;
 var gStars = 0;
 var gPowerups;
@@ -110,8 +110,10 @@ function onStart() {
   )}.gif`;
   document.querySelector('.modal').classList.remove('show');
   document.querySelector('.action-container').classList.remove('none');
-
+  let elTimer = document.querySelector('.timer-modal');
   gChallengeInterval = setInterval(() => {
+    let timeForHtml = getTime(gTime);
+    elTimer.innerHTML = `<span>${timeForHtml}</span>`;
     gTime += 1000;
   }, 1000);
 
@@ -377,4 +379,11 @@ function _createPowerup(name, imgUrl, title) {
     count: 1,
     title,
   };
+}
+function getTime(time) {
+  if (time < 10 * 1000) {
+    return `0${time / 1000}`;
+  } else if (time >= 10) {
+    return `${time / 1000}`;
+  }
 }
