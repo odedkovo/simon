@@ -3,7 +3,8 @@
 const PLAYERS_KEY = 'playerDB'
 const gPlayers = loadFromLocalStorage(PLAYERS_KEY) || []
 
-const gAudioPowerup = new Audio('sound/powerup.mp3')
+const gAudioPowerupAchieved = new Audio('sound/powerup-achieved.mp3')
+const gAudioPowerupUsed = new Audio('sound/powerup-used.mp3')
 const gAudioRight = new Audio('sound/right.mp3')
 const gAudioWrong = new Audio('sound/wrong.mp3')
 const gAudioCheer = new Audio('sound/cheer.mp3')
@@ -38,7 +39,8 @@ let gCountWinning = 0
 var gAudioLength = 1200
 var gBalloonsNums
 
-gAudioPowerup.volume = 0.05
+gAudioPowerupAchieved.volume = 0.05
+gAudioPowerupUsed.volume = 0.05
 gAudioBreak.volume = 0.05
 gAudioRight.volume = 0.05
 gAudioWrong.volume = 0.05
@@ -166,8 +168,10 @@ function onUserPress(elBtn) {
         clearInterval(gSkipIntervalId)
 
         if (gLevel % 3 === 0) {
+            document.querySelector('.user-msg').classList.add('powerup')
             addRandomPowerup()
             flashMsg('זכית בתמריץ חדש!')
+            gAudioPowerupAchieved.play()
         }
 
         gIsUserTurn = false
@@ -208,21 +212,21 @@ function onUsePowerup(powerupName) {
             if (!isAllowedToUse('next-note')) return
             decrementPowerupCount('next-note')
             onTapNextNote()
-            gAudioPowerup.play()
+            gAudioPowerupUsed.play()
             break
         }
         case 'skip-level': {
             if (!isAllowedToUse('skip-level')) return
             decrementPowerupCount('skip-level')
             gSkipIntervalId = setInterval(onTapNextNote, 700)
-            gAudioPowerup.play()
+            gAudioPowerupUsed.play()
             break
         }
         case 'slow-time': {
             if (!isAllowedToUse('slow-time')) return
             decrementPowerupCount('slow-time')
             gIsSlowTime = true
-            gAudioPowerup.play()
+            gAudioPowerupUsed.play()
             break
         }
     }
@@ -287,6 +291,7 @@ function flashMsg(msg) {
     elMsg.classList.add('show')
     setTimeout(() => {
         elMsg.classList.remove('show')
+        elMsg.classList.remove('powerup')
     }, 1500)
 }
 
