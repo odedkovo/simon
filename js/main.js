@@ -3,12 +3,12 @@
 const PLAYERS_KEY = 'playerDB';
 const gPlayers = loadFromLocalStorage(PLAYERS_KEY) || [];
 
-const gAudioPowerupAchieved = new Audio('sound/powerup-achieved.mp3')
-const gAudioPowerupUsed = new Audio('sound/powerup-used.mp3')
-const gAudioRight = new Audio('sound/right.mp3')
-const gAudioWrong = new Audio('sound/wrong.mp3')
-const gAudioCheer = new Audio('sound/cheer.mp3')
-const gAudioBreak = new Audio('sound/broken.mp3')
+const gAudioPowerupAchieved = new Audio('sound/powerup-achieved.mp3');
+const gAudioPowerupUsed = new Audio('sound/powerup-used.mp3');
+const gAudioRight = new Audio('sound/right.mp3');
+const gAudioWrong = new Audio('sound/wrong.mp3');
+const gAudioCheer = new Audio('sound/cheer.mp3');
+const gAudioBreak = new Audio('sound/broken.mp3');
 const gAudioNotes = [
   new Audio('sound/note/1.mp3'),
   new Audio('sound/note/2.mp3'),
@@ -22,8 +22,8 @@ const gAudioNotes = [
 ];
 
 // Don't scare that kid
-gAudioPowerupAchieved.volume = 0.05
-gAudioPowerupUsed.volume = 0.05
+gAudioPowerupAchieved.volume = 0.05;
+gAudioPowerupUsed.volume = 0.05;
 gAudioBreak.volume = 0.05;
 gAudioRight.volume = 0.05;
 gAudioWrong.volume = 0.05;
@@ -38,7 +38,7 @@ var gNoteSeq; // string of note numbers - example: '1214'
 var gUserCurrNoteIdx; // index of note in gNoteSeq that user should click next
 var gChallengeInterval;
 var gSkipIntervalId;
-var gTime = 55000;
+var gTime = 0;
 var gLevel = 1;
 var gStars = 0;
 var gPowerups;
@@ -188,12 +188,12 @@ function onUserPress(elBtn) {
 
     clearInterval(gSkipIntervalId);
 
-        if (gLevel % 3 === 0) {
-            document.querySelector('.user-msg').classList.add('powerup')
-            addRandomPowerup()
-            flashMsg('זכית בתמריץ חדש!')
-            gAudioPowerupAchieved.play()
-        }
+    if (gLevel % 3 === 0) {
+      document.querySelector('.user-msg').classList.add('powerup');
+      addRandomPowerup();
+      flashMsg('זכית בתמריץ חדש!');
+      gAudioPowerupAchieved.play();
+    }
 
     gIsUserTurn = false;
     gLevel++;
@@ -202,7 +202,10 @@ function onUserPress(elBtn) {
       gGameScore++;
       document.querySelector('.score').innerText = gGameScore;
 
+      console.log('glevel', gLevel);
+      console.log('gTime', gTime);
       if (gLevel === 3 && gTime < 1000 * 30) {
+        console.log('in the if ');
         goodJob('וואו!! הצלחת להגיע לשלב 3 בפחות משלושים שניות קיבלת כוכב');
       }
 
@@ -232,29 +235,29 @@ function onUserPress(elBtn) {
 function onUsePowerup(powerupName) {
   if (!gIsUserTurn) return;
 
-    switch (powerupName) {
-        case 'next-note': {
-            if (!isAllowedToUse('next-note')) return
-            decrementPowerupCount('next-note')
-            onTapNextNote()
-            gAudioPowerupUsed.play()
-            break
-        }
-        case 'skip-level': {
-            if (!isAllowedToUse('skip-level')) return
-            decrementPowerupCount('skip-level')
-            gSkipIntervalId = setInterval(onTapNextNote, 700)
-            gAudioPowerupUsed.play()
-            break
-        }
-        case 'slow-time': {
-            if (!isAllowedToUse('slow-time')) return
-            decrementPowerupCount('slow-time')
-            gIsSlowTime = true
-            gAudioPowerupUsed.play()
-            break
-        }
+  switch (powerupName) {
+    case 'next-note': {
+      if (!isAllowedToUse('next-note')) return;
+      decrementPowerupCount('next-note');
+      onTapNextNote();
+      gAudioPowerupUsed.play();
+      break;
     }
+    case 'skip-level': {
+      if (!isAllowedToUse('skip-level')) return;
+      decrementPowerupCount('skip-level');
+      gSkipIntervalId = setInterval(onTapNextNote, 700);
+      gAudioPowerupUsed.play();
+      break;
+    }
+    case 'slow-time': {
+      if (!isAllowedToUse('slow-time')) return;
+      decrementPowerupCount('slow-time');
+      gIsSlowTime = true;
+      gAudioPowerupUsed.play();
+      break;
+    }
+  }
 }
 
 function isAllowedToUse(powerupName) {
@@ -311,13 +314,13 @@ function breakScreen() {
 }
 
 function flashMsg(msg) {
-    const elMsg = document.querySelector('.user-msg')
-    elMsg.innerText = msg
-    elMsg.classList.add('show')
-    setTimeout(() => {
-        elMsg.classList.remove('show')
-        elMsg.classList.remove('powerup')
-    }, 1500)
+  const elMsg = document.querySelector('.user-msg');
+  elMsg.innerText = msg;
+  elMsg.classList.add('show');
+  setTimeout(() => {
+    elMsg.classList.remove('show');
+    elMsg.classList.remove('powerup');
+  }, 1500);
 }
 
 function goodJob(txt) {
